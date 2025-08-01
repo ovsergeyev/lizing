@@ -1,0 +1,27 @@
+services:
+  parser:
+    build:
+      context: ./parser
+    container_name: parser
+    depends_on:
+      - db
+    restart: unless-stopped
+    command: >
+      /bin/sh -c "
+      alembic upgrade head &&
+      python main.py
+      "
+
+  db:
+    image: postgres:16
+    container_name: db_lizing
+    env_file:
+      - .local.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT}:5432"
+    restart: unless-stopped
+
+volumes:
+  pgdata:
