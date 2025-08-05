@@ -1,28 +1,40 @@
 services:
-  parser:
+  lizing-parser-sber:
     build:
-      context: ./parser
-    container_name: parser
+      context: ./lizing-parser-sber
+    container_name: lizing-parser-sber
     depends_on:
       - db
     restart: unless-stopped
+
+  lizing-parser-vtb:
+    build:
+      context: ./lizing-parser-vtb
+    container_name: lizing-parser-vtb
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  lizing-migrations:
+    build:
+      context: ./migrations
+    container_name: migrations
+    depends_on:
+      - db
+    restart: no
     command: >
       /bin/sh -c "
-      alembic upgrade head &&
-      python main.py
+      alembic revision --autogenerate &&
+      alembic upgrade head
       "
 
   db:
     image: postgres:16
-    container_name: postgres-db
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+    container_name: lizing-db
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "${DB_PORT}:5432"
+      - "${POSTGRES_PORT}:5432"
     restart: unless-stopped
 
 volumes:
