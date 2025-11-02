@@ -1,0 +1,9 @@
+[submodule "migrations"]
+	path = migrations
+	url = git@github.com:ovsergeyev/lizing-migrations.git
+[submodule "lizing-parser-sber"]
+	path = lizing-parser-sber
+	url = git@github.com:ovsergeyev/lizing-parser-sber.git
+[submodule "lizing-parser-vtb"]
+	path = lizing-parser-vtb
+	url = git@github.com:ovsergeyev/lizing-parser-vtb.git
