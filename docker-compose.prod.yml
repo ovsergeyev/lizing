@@ -1,27 +1,37 @@
 services:
-  lizing-parser-sber:
+  parser-sber:
     build:
       context: ./lizing-parser-sber
     container_name: lizing-parser-sber
     depends_on:
       - db
-    restart: unless-stopped
+    restart: no
+    env_file:
+      - .env.prod
+    volumes:
+      - ./lizing-parser-sber/logs:/src/logs
+      - ./lizing-parser-sber/screenshots:/src/screenshots
+      - ./lizing-parser-sber/pages:/src/pages
 
-  lizing-parser-vtb:
+  parser-vtb:
     build:
       context: ./lizing-parser-vtb
     container_name: lizing-parser-vtb
     depends_on:
       - db
-    restart: unless-stopped
+    restart: no
+    env_file:
+      - .env.prod
 
-  lizing-migrations:
+  migrations:
     build:
       context: ./migrations
-    container_name: migrations
+    container_name: lizing-migrations
     depends_on:
       - db
     restart: no
+    env_file:
+      - .env.prod
     command: >
       /bin/sh -c "
       alembic revision --autogenerate &&
@@ -34,9 +44,9 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     env_file:
-      - .env
+      - .env.prod
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "5001:5432"
     restart: unless-stopped
 
 volumes:
